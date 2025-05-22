@@ -17,3 +17,37 @@ def generate_matrix(N):
             else:
                 A[i, j] = np.random.randint(-10, 10) # Подматрица E
     return A
+
+
+def form_matrix_F(A):
+    N = A.shape[0]
+    C = A[N // 2:, :N // 2]
+
+    # Подсчет количества положительных и отрицательных элементов
+    pos_count_area2 = np.sum(C[:, ::2] > 0)  # Сумма положительных элементов в четных столбцах области 2 подматрицы C
+    neg_count_area4 = np.sum(C[:, 1::2] < 0)  # Сумма отрицательных элементов в нечетных столбцах области 4 подматрицы C
+
+    if pos_count_area2 > neg_count_area4: # Проверка условия
+        C[:, :N // 4], C[:, 3 * N // 4:] = C[:, 3 * N // 4:], C[:, :N // 4]
+
+    return A
+
+
+def plot_matrix(matrix):
+    plt.imshow(matrix, cmap='viridis')
+    plt.colorbar()
+    plt.show()
+
+
+def main():
+    K = int(input("Введите число K: "))
+    N = int(input("Введите размер матрицы N: "))
+
+    A = generate_matrix(N)
+    print("\nМатрица A:\n", A)
+    plot_matrix(A)
+
+    F = form_matrix_F(A.copy())
+    print("\nМатрица F:\n", F)
+    plot_matrix(F)
+main()
